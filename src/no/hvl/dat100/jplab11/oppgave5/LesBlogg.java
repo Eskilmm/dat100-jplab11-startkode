@@ -22,7 +22,45 @@ public class LesBlogg {
 
 	public static Blogg les(String mappe, String filnavn) {
 
-		throw new UnsupportedOperationException(TODO.method());
+		Blogg nySamling = null;
+		
+		try (BufferedReader br = new BufferedReader(new FileReader(mappe + filnavn))) {
+			String line = br.readLine();
+			
+			if (line != null) {
+				int antallInnlegg = Integer.parseInt(line.trim());
+				nySamling = new Blogg(antallInnlegg);
+			}
+			
+			while (line != null) {
+				line = br.readLine();
+				
+				if (line != null && line.trim().equals(TEKST)) {
+					int id = Integer.parseInt(br.readLine().trim());
+					String bruker = br.readLine().trim();
+					String dato = br.readLine().trim();
+					int likes = Integer.parseInt(br.readLine().trim());
+					String tekst = br.readLine().trim();
+					
+					nySamling.leggTil(new Tekst(id, bruker, dato, likes, tekst));
+				} else if (line != null && line.trim().equals(BILDE)) {
+					int id = Integer.parseInt(br.readLine().trim());
+					String bruker = br.readLine().trim();
+					String dato = br.readLine().trim();
+					int likes = Integer.parseInt(br.readLine().trim());
+					String tekst = br.readLine().trim();
+					String url = br.readLine().trim();
+					
+					nySamling.leggTil(new Bilde(id, bruker, dato, likes, tekst, url));
+				}
+			} 
+		} catch (FileNotFoundException e) {
+			System.err.println(e.getMessage());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return nySamling;
 
 	}
 }
